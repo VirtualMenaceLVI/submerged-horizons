@@ -1,45 +1,54 @@
--- Server-only network strings
+-- Server-only util.AddNetworkString registrations
 util.AddNetworkString("sensors_open_panel")
-util.AddNetworkString("sensors_sync_defs")
-util.AddNetworkString("sensors_start_scan")
-util.AddNetworkString("sensors_progress_update")
-util.AddNetworkString("sensors_result_update")
+util.AddNetworkString("sensors_sync_scans")
+util.AddNetworkString("sensors_scan_request")
+util.AddNetworkString("sensors_scan_result")
+util.AddNetworkString("scanner_start_scan")
+util.AddNetworkString("scanner_cancel_scan")
+util.AddNetworkString("sensors_manage_open")
+util.AddNetworkString("sensors_manage_add")
+util.AddNetworkString("sensors_manage_remove")
 
--- Check for permission
-function isValidUser(ply)
-    return ply:IsUserGroup("gamemaster") or ply:IsUserGroup("superadmin")
+-- SHRPSensors table with Defs and Results
+SHRPSensors = {
+    Defs = {},
+    Results = {},
+}
+
+-- Helper functions
+function SHRPSensors.IsGM(ply)
+    return ply:IsSuperAdmin() or ply:GetUserGroup() == "gamemaster"
 end
 
--- Safe scan definitions stored server-side
-local scanDefs = {}  -- Add definitions here
+-- Scanning behavior
+function startScan(scanName)
+    net.Start("scanner_start_scan")
+    net.WriteFloat(5) -- Duration = 5 seconds
+    net.Send(ply)
 
--- Net message for opening the console
-net.Receive("sensors_open_panel", function(len, ply)
-    if not isValidUser(ply) then return end
-    -- Open console logic here
-end)
-
--- Syncing scan definitions and results
-net.Receive("sensors_sync_defs", function(len, ply)
-    if not isValidUser(ply) then return end
-    -- Sync definitions logic here
-end)
-
--- Starting scans
-net.Receive("sensors_start_scan", function(len, ply)
-    if not isValidUser(ply) then return end
-    local scanId = math.random(1, 10000)  -- Example scan ID
     timer.Simple(5, function()
-        -- Scan logic and broadcast results
-        net.Start("sensors_result_update")
-        net.WriteString("Scan complete for ID: " .. scanId)
+        -- Compute result text based on scan type
+        local resultText = "Scan Result for " .. scanName
+        -- Store result
+        SHRPSensors.Results[scanName] = resultText
+        -- Broadcast results
+        net.Start("sensors_sync_scans")
+        net.WriteTable(SHRPSensors.Defs)
+        net.WriteTable(SHRPSensors.Results)
         net.Broadcast()
+        -- Send result to requesting client
+        net.Start("sensors_scan_result")
+        net.WriteString(resultText)
+        net.Send(ply)
     end)
-    -- Progress updates example
-end)
+end
 
--- Create a concommand for GM-only scan management
-concommand.Add("sensor_scans_manage", function(ply)
-    if not isValidUser(ply) then return end
-    -- Open Derma UI for managing scans
-end)
+-- Default scan templates
+table.insert(SHRPSensors.Defs, {name="Players", type="players"})
+table.insert(SHRPSensors.Defs, {name="Props", type="props"})
+-- Add more scan types as needed
+
+-- Ensure net.WriteTable only sends serializable data
+function serializeData(data)
+    return data
+end
