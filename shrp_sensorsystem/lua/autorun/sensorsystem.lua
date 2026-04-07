@@ -1,43 +1,45 @@
--- Register the network string for communication
-util.AddNetworkString("sensor_scans_manage")
+-- Server-only network strings
+util.AddNetworkString("sensors_open_panel")
+util.AddNetworkString("sensors_sync_defs")
+util.AddNetworkString("sensors_start_scan")
+util.AddNetworkString("sensors_progress_update")
+util.AddNetworkString("sensors_result_update")
 
--- Server-only commands for managing scans
-local scans = {}
-
--- GM-only console command to manage scans
-concommand.Add("sensor_scans_manage", function(ply)
-    -- Open the scanner console UI
-    if IsValid(ply) then
-        net.Start("sensor_console_ui")
-        net.WriteTable(scans)
-        net.Send(ply)
-    end
-end)
-
--- Function to start a scan
-function StartScan(scanName)
-    -- Code to trigger scan and store results
-    -- Notify clients of scan progress
-    for progress = 1, 5 do
-        timer.Simple(progress, function()
-            net.Start("sensor_scan_progress")
-            net.WriteString(scanName)
-            net.WriteInt(progress, 32)
-            net.Broadcast()
-        end)
-    end
-
-    -- Final results after 5 seconds
-    timer.Simple(5, function()
-        local result = "Scan Result for " .. scanName
-        scans[scanName] = result
-        net.Start("sensor_scan_result")
-        net.WriteString(scanName)
-        net.WriteString(result)
-        net.Broadcast()
-    end)
+-- Check for permission
+function isValidUser(ply)
+    return ply:IsUserGroup("gamemaster") or ply:IsUserGroup("superadmin")
 end
 
--- Example of triggering a scan
--- This would normally be called from the relevant entity or SWEP
-StartScan("Default Scan")
+-- Safe scan definitions stored server-side
+local scanDefs = {}  -- Add definitions here
+
+-- Net message for opening the console
+net.Receive("sensors_open_panel", function(len, ply)
+    if not isValidUser(ply) then return end
+    -- Open console logic here
+end)
+
+-- Syncing scan definitions and results
+net.Receive("sensors_sync_defs", function(len, ply)
+    if not isValidUser(ply) then return end
+    -- Sync definitions logic here
+end)
+
+-- Starting scans
+net.Receive("sensors_start_scan", function(len, ply)
+    if not isValidUser(ply) then return end
+    local scanId = math.random(1, 10000)  -- Example scan ID
+    timer.Simple(5, function()
+        -- Scan logic and broadcast results
+        net.Start("sensors_result_update")
+        net.WriteString("Scan complete for ID: " .. scanId)
+        net.Broadcast()
+    end)
+    -- Progress updates example
+end)
+
+-- Create a concommand for GM-only scan management
+concommand.Add("sensor_scans_manage", function(ply)
+    if not isValidUser(ply) then return end
+    -- Open Derma UI for managing scans
+end)
