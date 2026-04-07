@@ -8,12 +8,16 @@ TOOL.Name       = "Scanner Tool"
 TOOL.Command    = nil
 TOOL.ConfigName = ""
 
+-- Client-side storage for the values entered in the tool panel
+local _scanToolName   = ""
+local _scanToolResult = ""
+
 if CLIENT then
     language.Add("Tool.scanner_tool.name", "Scanner Tool")
     language.Add("Tool.scanner_tool.desc",
-        "Mark any prop as scannable. Left-click to inspect; right-click to set / edit scan data.")
+        "Mark any prop as scannable. Left-click to inspect; right-click to apply the scan name and result from the tool panel.")
     language.Add("Tool.scanner_tool.0",
-        "Left-click to inspect scan data. Right-click to assign or edit scan data.")
+        "Left-click to inspect scan data. Right-click to apply scan data from the tool panel to the entity.")
 end
 
 -- ── Left-click: inspect current scan data ────────────────────────────────────
@@ -36,96 +40,83 @@ function TOOL:LeftClick(trace)
     return true
 end
 
--- ── Right-click: open edit UI ─────────────────────────────────────────────────
+-- ── Right-click: apply scan data from the tool panel to the entity ────────────
 function TOOL:RightClick(trace)
     if SERVER then return true end
     local ent = trace.Entity
     if not IsValid(ent) then return false end
 
-    -- Avoid opening duplicate frames
-    if IsValid(SHRPSensors._ScannerToolFrame) then SHRPSensors._ScannerToolFrame:Close() end
-
-    local existingName   = ent:GetNWString("ScanName",   "")
-    local existingResult = ent:GetNWString("ScanResult", "")
-
-    local frame = vgui.Create("DFrame")
-    SHRPSensors._ScannerToolFrame = frame
-    frame:SetTitle("Set Scan Data  –  " .. ent:GetClass())
-    frame:SetSize(400, 240)
-    frame:Center()
-    frame:MakePopup()
-    frame:SetDraggable(true)
-    frame:ShowCloseButton(true)
-
-    frame.Paint = function(self, w, h)
-        draw.RoundedBox(10, 0, 0, w, h, Color(10, 16, 26, 252))
-        draw.RoundedBox(10, 0, 0, w, 38, Color(0, 130, 80, 220))
-        draw.SimpleText(
-            "SCANNER TOOL  –  Set Scannable Data",
-            "DermaDefaultBold", w * 0.5, 19,
-            Color(180, 255, 215), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER
-        )
+    if _scanToolName == "" then
+        chat.AddText(Color(255, 160, 60), "[Scanner Tool] Enter a Scan Name in the tool panel first.")
+        return false
     end
 
-    local lName = vgui.Create("DLabel", frame)
-    lName:SetPos(14, 46); lName:SetSize(372, 20); lName:SetText("Scan Name:")
-    lName:SetTextColor(Color(180, 210, 240))
+    net.Start("sensors_set_scannable")
+    net.WriteEntity(ent)
+    net.WriteString(_scanToolName)
+    net.WriteString(_scanToolResult)
+    net.SendToServer()
 
-    local eName = vgui.Create("DTextEntry", frame)
-    eName:SetPos(14, 66); eName:SetSize(372, 22)
-    eName:SetPlaceholderText("e.g. Unknown Vessel, Bio-reading, Anomaly…")
-    eName:SetValue(existingName)
-
-    local lResult = vgui.Create("DLabel", frame)
-    lResult:SetPos(14, 96); lResult:SetSize(372, 20); lResult:SetText("Scan Result:")
-    lResult:SetTextColor(Color(180, 210, 240))
-
-    local eResult = vgui.Create("DTextEntry", frame)
-    eResult:SetPos(14, 116); eResult:SetSize(372, 64)
-    eResult:SetMultiline(true)
-    eResult:SetPlaceholderText("Describe what is detected when scanned…")
-    eResult:SetValue(existingResult)
-
-    local bSave = vgui.Create("DButton", frame)
-    bSave:SetPos(14, 192); bSave:SetSize(180, 30)
-    bSave:SetText("Save")
-    bSave:SetFont("DermaDefaultBold")
-    bSave.DoClick = function()
-        local n, r = eName:GetValue(), eResult:GetValue()
-        if n == "" then
-            chat.AddText(Color(255, 120, 120), "[Scanner Tool] Name cannot be empty.")
-            return
-        end
-        net.Start("sensors_set_scannable")
-        net.WriteEntity(ent)
-        net.WriteString(n)
-        net.WriteString(r)
-        net.SendToServer()
-        frame:Close()
-    end
-
-    local bClear = vgui.Create("DButton", frame)
-    bClear:SetPos(206, 192); bClear:SetSize(180, 30)
-    bClear:SetText("Clear (make unscannable)")
-    bClear.DoClick = function()
-        net.Start("sensors_set_scannable")
-        net.WriteEntity(ent)
-        net.WriteString("")
-        net.WriteString("")
-        net.SendToServer()
-        frame:Close()
-    end
-
+    chat.AddText(
+        Color(100, 210, 255), "[Scanner Tool] ",
+        Color(255, 255, 255), "Applied scan data to ",
+        Color(200, 230, 255), ent:GetClass()
+    )
     return true
 end
 
--- ── Tool panel (left-side info box) ──────────────────────────────────────────
+-- ── Tool panel (left-side tool menu) ─────────────────────────────────────────
 if CLIENT then
     function TOOL.BuildCPanel(panel)
         panel:AddControl("Header", {
             Description = "Use this tool to make any prop scannable by the Hand Scanner.\n\n" ..
                           "• Left-click  – Inspect current scan data\n" ..
-                          "• Right-click – Set or edit scan name & result"
+                          "• Right-click – Apply the name and result below to the entity"
         })
+
+        -- Scan Name label
+        local lName = vgui.Create("DLabel", panel)
+        lName:SetText("Scan Name:")
+        lName:SetTextColor(Color(180, 210, 240))
+        lName:SetTall(20)
+        panel:AddItem(lName)
+
+        -- Scan Name text entry
+        local eName = vgui.Create("DTextEntry", panel)
+        eName:SetTall(22)
+        eName:SetPlaceholderText("e.g. Unknown Vessel, Bio-reading, Anomaly…")
+        eName.OnChange = function(self)
+            _scanToolName = self:GetValue()
+        end
+        panel:AddItem(eName)
+
+        -- Scan Result label
+        local lResult = vgui.Create("DLabel", panel)
+        lResult:SetText("Scan Result:")
+        lResult:SetTextColor(Color(180, 210, 240))
+        lResult:SetTall(20)
+        panel:AddItem(lResult)
+
+        -- Scan Result text entry (multiline)
+        local eResult = vgui.Create("DTextEntry", panel)
+        eResult:SetTall(72)
+        eResult:SetMultiline(true)
+        eResult:SetPlaceholderText("Describe what is detected when scanned…")
+        eResult.OnChange = function(self)
+            _scanToolResult = self:GetValue()
+        end
+        panel:AddItem(eResult)
+
+        -- Clear button
+        local bClear = vgui.Create("DButton", panel)
+        bClear:SetTall(26)
+        bClear:SetText("Clear (right-click entity to make unscannable)")
+        bClear.DoClick = function()
+            eName:SetValue("")
+            eResult:SetValue("")
+            _scanToolName   = ""
+            _scanToolResult = ""
+        end
+        panel:AddItem(bClear)
     end
 end

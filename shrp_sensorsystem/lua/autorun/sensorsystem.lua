@@ -1,5 +1,6 @@
 if SERVER then
     util.AddNetworkString("sensors_open_panel")
+    util.AddNetworkString("sensors_open_manage")
     util.AddNetworkString("sensors_sync_entries")
     util.AddNetworkString("sensors_scan_request")
     util.AddNetworkString("sensors_scan_result")
@@ -141,6 +142,16 @@ if SERVER then
         ply:ChatPrint("Marked '" .. tostring(ent:GetClass()) .. "' as scannable: " .. name)
     end)
 
+    -- GM console command: open the sensor management panel
+    concommand.Add("shrp_gm_sensors_manage", function(ply)
+        if not SHRPSensors.IsGM(ply) then
+            ply:ChatPrint("[Sensors] You must be a Game Master to use this command.")
+            return
+        end
+        net.Start("sensors_open_manage")
+        net.Send(ply)
+    end)
+
     -- Sync entries to each freshly spawned player
     hook.Add("PlayerInitialSpawn", "SHRPSensorsSyncOnJoin", function(ply)
         timer.Simple(1, function()
@@ -221,6 +232,11 @@ if CLIENT then
         SHRPSensors.OpenSensorPanel()
     end)
 
+    -- ── Open management panel (from shrp_gm_sensors_manage command) ──────────
+    net.Receive("sensors_open_manage", function()
+        SHRPSensors.OpenManagePanel()
+    end)
+
     -- ─────────────────────────────────────────────────────────────────────────
     -- Hand-scanner result popup
     -- ─────────────────────────────────────────────────────────────────────────
@@ -277,9 +293,6 @@ if CLIENT then
             SHRPSensors._SensorPanel:Close()
         end
 
-        local isGM = LocalPlayer():IsSuperAdmin() or
-                     LocalPlayer():GetUserGroup() == "gamemaster"
-
         local frame = vgui.Create("DFrame")
         SHRPSensors._SensorPanel = frame
         frame:SetTitle("")
@@ -334,9 +347,8 @@ if CLIENT then
         lStatus:SetFont("DermaDefault")
 
         -- ── Entry list ────────────────────────────────────────────────────────
-        local listH = isGM and 224 or 260
         local scroll = vgui.Create("DScrollPanel", frame)
-        scroll:SetPos(10, 178); scroll:SetSize(500, listH)
+        scroll:SetPos(10, 178); scroll:SetSize(500, 260)
         scroll.Paint = function(_, w, h)
             draw.RoundedBox(6, 0, 0, w, h, Color(6, 12, 20, 175))
         end
@@ -360,14 +372,14 @@ if CLIENT then
                 end
 
                 local lName = vgui.Create("DLabel", row)
-                lName:SetPos(8, 0); lName:SetSize(isGM and 288 or 360, 38)
+                lName:SetPos(8, 0); lName:SetSize(360, 38)
                 lName:SetText(entry.name)
                 lName:SetTextColor(Color(200, 230, 255))
                 lName:SetFont("DermaDefaultBold")
                 lName:SetContentAlignment(4)
 
                 local btnScan = vgui.Create("DButton", row)
-                btnScan:SetPos(isGM and 300 or 372, 5)
+                btnScan:SetPos(372, 5)
                 btnScan:SetSize(68, 28)
                 btnScan:SetText("Scan")
                 btnScan:SetFont("DermaDefaultBold")
@@ -382,96 +394,10 @@ if CLIENT then
                     net.SendToServer()
                     RebuildList()
                 end
-
-                if isGM then
-                    -- Edit button
-                    local btnEdit = vgui.Create("DButton", row)
-                    btnEdit:SetPos(374, 5); btnEdit:SetSize(52, 28)
-                    btnEdit:SetText("Edit")
-                    btnEdit.DoClick = function()
-                        local ef = vgui.Create("DFrame")
-                        ef:SetTitle("Edit Entry")
-                        ef:SetSize(380, 230)
-                        ef:Center(); ef:MakePopup()
-
-                        local lN = vgui.Create("DLabel", ef)
-                        lN:SetPos(10, 34); lN:SetSize(360, 20); lN:SetText("Name:")
-                        local eN = vgui.Create("DTextEntry", ef)
-                        eN:SetPos(10, 54); eN:SetSize(360, 22); eN:SetValue(entry.name)
-
-                        local lR = vgui.Create("DLabel", ef)
-                        lR:SetPos(10, 82); lR:SetSize(360, 20); lR:SetText("Scan Result:")
-                        local eR = vgui.Create("DTextEntry", ef)
-                        eR:SetPos(10, 102); eR:SetSize(360, 68)
-                        eR:SetMultiline(true); eR:SetValue(entry.result)
-
-                        local bSave = vgui.Create("DButton", ef)
-                        bSave:SetPos(10, 186); bSave:SetSize(360, 28); bSave:SetText("Save")
-                        bSave.DoClick = function()
-                            local n, r = eN:GetValue(), eR:GetValue()
-                            if n == "" then return end
-                            net.Start("sensors_manage_edit")
-                            net.WriteUInt(eID, 16)
-                            net.WriteString(n)
-                            net.WriteString(r)
-                            net.SendToServer()
-                            ef:Close()
-                        end
-                    end
-
-                    -- Delete button
-                    local btnDel = vgui.Create("DButton", row)
-                    btnDel:SetPos(430, 5); btnDel:SetSize(58, 28)
-                    btnDel:SetText("Delete")
-                    btnDel.DoClick = function()
-                        net.Start("sensors_manage_remove")
-                        net.WriteUInt(eID, 16)
-                        net.SendToServer()
-                    end
-                end
             end
         end
 
         RebuildList()
-
-        -- ── GM: Add entry ─────────────────────────────────────────────────────
-        if isGM then
-            local btnAdd = vgui.Create("DButton", frame)
-            btnAdd:SetPos(10, 408); btnAdd:SetSize(500, 34)
-            btnAdd:SetText("+ Add New Sensor Entry")
-            btnAdd:SetFont("DermaDefaultBold")
-            btnAdd.DoClick = function()
-                local af = vgui.Create("DFrame")
-                af:SetTitle("Add Sensor Entry")
-                af:SetSize(380, 230)
-                af:Center(); af:MakePopup()
-
-                local lN = vgui.Create("DLabel", af)
-                lN:SetPos(10, 34); lN:SetSize(360, 20); lN:SetText("Name:")
-                local eN = vgui.Create("DTextEntry", af)
-                eN:SetPos(10, 54); eN:SetSize(360, 22)
-                eN:SetPlaceholderText("e.g. Anomaly, Vessel, Life Form…")
-
-                local lR = vgui.Create("DLabel", af)
-                lR:SetPos(10, 82); lR:SetSize(360, 20); lR:SetText("Scan Result:")
-                local eR = vgui.Create("DTextEntry", af)
-                eR:SetPos(10, 102); eR:SetSize(360, 68)
-                eR:SetMultiline(true)
-                eR:SetPlaceholderText("Describe what the sensors detect…")
-
-                local bAdd = vgui.Create("DButton", af)
-                bAdd:SetPos(10, 186); bAdd:SetSize(360, 28); bAdd:SetText("Add Entry")
-                bAdd.DoClick = function()
-                    local n, r = eN:GetValue(), eR:GetValue()
-                    if n == "" then return end
-                    net.Start("sensors_manage_add")
-                    net.WriteString(n)
-                    net.WriteString(r)
-                    net.SendToServer()
-                    af:Close()
-                end
-            end
-        end
 
         -- ── React to incoming scan results ────────────────────────────────────
         SHRPSensors.OnPanelScanResult = function(id, name, result)
@@ -493,6 +419,158 @@ if CLIENT then
             SHRPSensors.OnPanelScanResult = nil
             SHRPSensors._SensorPanel      = nil
             panelCbs[syncCbIdx]           = nil
+        end
+    end
+
+    -- ─────────────────────────────────────────────────────────────────────────
+    -- GM Management Panel  (opened via shrp_gm_sensors_manage concommand)
+    -- ─────────────────────────────────────────────────────────────────────────
+    function SHRPSensors.OpenManagePanel()
+        if IsValid(SHRPSensors._ManagePanel) then
+            SHRPSensors._ManagePanel:Close()
+        end
+
+        local frame = vgui.Create("DFrame")
+        SHRPSensors._ManagePanel = frame
+        frame:SetTitle("")
+        frame:SetSize(520, 480)
+        frame:Center()
+        frame:MakePopup()
+        frame:SetDraggable(true)
+        frame:ShowCloseButton(true)
+
+        frame.Paint = function(self, w, h)
+            draw.RoundedBox(12, 0, 0, w, h, Color(10, 16, 26, 250))
+            draw.RoundedBox(12, 0, 0, w, 40, Color(70, 8, 140, 235))
+            draw.SimpleText(
+                "SENSOR MANAGEMENT  –  GM ONLY",
+                "DermaDefaultBold", 16, 20,
+                Color(220, 205, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER
+            )
+        end
+
+        -- ── Entry list ────────────────────────────────────────────────────────
+        local scroll = vgui.Create("DScrollPanel", frame)
+        scroll:SetPos(10, 48); scroll:SetSize(500, 340)
+        scroll.Paint = function(_, w, h)
+            draw.RoundedBox(6, 0, 0, w, h, Color(6, 12, 20, 175))
+        end
+
+        local function RebuildManageList()
+            scroll:Clear()
+            for _, entry in ipairs(SHRPSensors.Entries) do
+                local row = vgui.Create("DPanel", scroll)
+                row:SetSize(492, 38)
+                row:Dock(TOP)
+                row:DockMargin(4, 2, 4, 0)
+                local eID = entry.id
+
+                row.Paint = function(self, w, h)
+                    draw.RoundedBox(4, 0, 0, w, h, Color(14, 26, 40, 185))
+                end
+
+                local lName = vgui.Create("DLabel", row)
+                lName:SetPos(8, 0); lName:SetSize(288, 38)
+                lName:SetText(entry.name)
+                lName:SetTextColor(Color(200, 230, 255))
+                lName:SetFont("DermaDefaultBold")
+                lName:SetContentAlignment(4)
+
+                -- Edit button
+                local btnEdit = vgui.Create("DButton", row)
+                btnEdit:SetPos(300, 5); btnEdit:SetSize(84, 28)
+                btnEdit:SetText("Edit")
+                btnEdit.DoClick = function()
+                    local ef = vgui.Create("DFrame")
+                    ef:SetTitle("Edit Entry")
+                    ef:SetSize(380, 230)
+                    ef:Center(); ef:MakePopup()
+
+                    local lN = vgui.Create("DLabel", ef)
+                    lN:SetPos(10, 34); lN:SetSize(360, 20); lN:SetText("Name:")
+                    local eN = vgui.Create("DTextEntry", ef)
+                    eN:SetPos(10, 54); eN:SetSize(360, 22); eN:SetValue(entry.name)
+
+                    local lR = vgui.Create("DLabel", ef)
+                    lR:SetPos(10, 82); lR:SetSize(360, 20); lR:SetText("Scan Result:")
+                    local eR = vgui.Create("DTextEntry", ef)
+                    eR:SetPos(10, 102); eR:SetSize(360, 68)
+                    eR:SetMultiline(true); eR:SetValue(entry.result)
+
+                    local bSave = vgui.Create("DButton", ef)
+                    bSave:SetPos(10, 186); bSave:SetSize(360, 28); bSave:SetText("Save")
+                    bSave.DoClick = function()
+                        local n, r = eN:GetValue(), eR:GetValue()
+                        if n == "" then return end
+                        net.Start("sensors_manage_edit")
+                        net.WriteUInt(eID, 16)
+                        net.WriteString(n)
+                        net.WriteString(r)
+                        net.SendToServer()
+                        ef:Close()
+                    end
+                end
+
+                -- Delete button
+                local btnDel = vgui.Create("DButton", row)
+                btnDel:SetPos(390, 5); btnDel:SetSize(98, 28)
+                btnDel:SetText("Delete")
+                btnDel.DoClick = function()
+                    net.Start("sensors_manage_remove")
+                    net.WriteUInt(eID, 16)
+                    net.SendToServer()
+                end
+            end
+        end
+
+        RebuildManageList()
+
+        -- ── Add entry button ──────────────────────────────────────────────────
+        local btnAdd = vgui.Create("DButton", frame)
+        btnAdd:SetPos(10, 398); btnAdd:SetSize(500, 34)
+        btnAdd:SetText("+ Add New Sensor Entry")
+        btnAdd:SetFont("DermaDefaultBold")
+        btnAdd.DoClick = function()
+            local af = vgui.Create("DFrame")
+            af:SetTitle("Add Sensor Entry")
+            af:SetSize(380, 230)
+            af:Center(); af:MakePopup()
+
+            local lN = vgui.Create("DLabel", af)
+            lN:SetPos(10, 34); lN:SetSize(360, 20); lN:SetText("Name:")
+            local eN = vgui.Create("DTextEntry", af)
+            eN:SetPos(10, 54); eN:SetSize(360, 22)
+            eN:SetPlaceholderText("e.g. Anomaly, Vessel, Life Form…")
+
+            local lR = vgui.Create("DLabel", af)
+            lR:SetPos(10, 82); lR:SetSize(360, 20); lR:SetText("Scan Result:")
+            local eR = vgui.Create("DTextEntry", af)
+            eR:SetPos(10, 102); eR:SetSize(360, 68)
+            eR:SetMultiline(true)
+            eR:SetPlaceholderText("Describe what the sensors detect…")
+
+            local bAdd = vgui.Create("DButton", af)
+            bAdd:SetPos(10, 186); bAdd:SetSize(360, 28); bAdd:SetText("Add Entry")
+            bAdd.DoClick = function()
+                local n, r = eN:GetValue(), eR:GetValue()
+                if n == "" then return end
+                net.Start("sensors_manage_add")
+                net.WriteString(n)
+                net.WriteString(r)
+                net.SendToServer()
+                af:Close()
+            end
+        end
+
+        -- Rebuild list on server sync
+        local syncCbIdx = #panelCbs + 1
+        panelCbs[syncCbIdx] = function()
+            if IsValid(frame) then RebuildManageList() end
+        end
+
+        frame.OnClose = function()
+            SHRPSensors._ManagePanel = nil
+            panelCbs[syncCbIdx]      = nil
         end
     end
 
