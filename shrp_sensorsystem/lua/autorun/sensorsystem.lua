@@ -169,9 +169,9 @@ if CLIENT then
 
     -- ── Progress bar ──────────────────────────────────────────────────────────
     net.Receive("scanner_start_scan", function()
-        local dur = net.ReadFloat()
-        net.ReadString() -- type ("panel" or "hand") – reserved for future use
-        scanBar = {startTime = CurTime(), duration = dur}
+        local dur      = net.ReadFloat()
+        local scanType = net.ReadString()
+        scanBar = {startTime = CurTime(), duration = dur, scanType = scanType}
     end)
 
     net.Receive("scanner_cancel_scan", function()
@@ -619,8 +619,4 @@ if CLIENT then
         end
     )
 
-    -- Rebuild spawnmenu list on sync
-    hook.Add("sensors_sync_entries_refresh", "SHRPSensorsSpawnmenuRefresh", function()
-        -- placeholder for any additional hooks
-    end)
 end

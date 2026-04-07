@@ -43,13 +43,13 @@ function TOOL:RightClick(trace)
     if not IsValid(ent) then return false end
 
     -- Avoid opening duplicate frames
-    if IsValid(SHRP_ScannerToolFrame) then SHRP_ScannerToolFrame:Close() end
+    if IsValid(SHRPSensors._ScannerToolFrame) then SHRPSensors._ScannerToolFrame:Close() end
 
     local existingName   = ent:GetNWString("ScanName",   "")
     local existingResult = ent:GetNWString("ScanResult", "")
 
     local frame = vgui.Create("DFrame")
-    SHRP_ScannerToolFrame = frame
+    SHRPSensors._ScannerToolFrame = frame
     frame:SetTitle("Set Scan Data  –  " .. ent:GetClass())
     frame:SetSize(400, 240)
     frame:Center()
