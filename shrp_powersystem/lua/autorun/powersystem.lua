@@ -50,34 +50,49 @@ if SERVER then
         Lighting = "relay_lighting"
     }
 
+    -- Expected number of relays per system. Missing or destroyed relays reduce
+    -- the maximum capacity proportionally (e.g. 1 of 2 sensor relays down = 50%).
+    local RelayExpectedCounts = {
+        Sensors        = 2,
+        Weapons        = 4,
+        Communications = 2,
+        Lighting       = 8
+    }
+
     local function GetRelayCapacity(system)
-        local class = RelaySystemClasses[system]
+        local class    = RelaySystemClasses[system]
+        local expected = RelayExpectedCounts[system]
+
         if not class then
             return 100
         end
 
-        local relays = ents.FindByClass(class)
-        if #relays == 0 then
-            return 100
+        -- Systems without a defined relay count use the old average-health logic.
+        if not expected then
+            local relays = ents.FindByClass(class)
+            if #relays == 0 then return 100 end
+            local totalHealth, count = 0, 0
+            for _, ent in ipairs(relays) do
+                if IsValid(ent) then
+                    local maxHealth = ent.MaxHealth or 100
+                    totalHealth = totalHealth + math.Clamp(ent:Health() / maxHealth * 100, 0, 100)
+                    count = count + 1
+                end
+            end
+            return count > 0 and math.max(0, totalHealth / count) or 100
         end
 
+        -- Sum up the health contribution of every found relay. Missing relays
+        -- (fewer placed than expected) contribute 0, reducing capacity further.
         local totalHealth = 0
-        local count = 0
-
-        for _, ent in ipairs(relays) do
+        for _, ent in ipairs(ents.FindByClass(class)) do
             if IsValid(ent) then
-                local health = ent:Health()
                 local maxHealth = ent.MaxHealth or 100
-                totalHealth = totalHealth + math.Clamp(health / maxHealth * 100, 0, 100)
-                count = count + 1
+                totalHealth = totalHealth + math.Clamp(ent:Health() / maxHealth * 100, 0, 100)
             end
         end
 
-        if count == 0 then
-            return 100
-        end
-
-        return math.max(0, totalHealth / count)
+        return math.max(0, totalHealth / expected)
     end
 
     local function BuildEngineeringPacket()
