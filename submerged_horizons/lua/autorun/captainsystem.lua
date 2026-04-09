@@ -7,18 +7,18 @@ end
 
 SHRPCaptain = SHRPCaptain or {}
 
+-- Shared alert colour definitions (used on both server and client).
+SHRPCaptain.AlertColors = {
+    Red    = Color(220, 40,  40),
+    Yellow = Color(220, 200, 40),
+    Blue   = Color(40,  100, 220),
+    Green  = Color(40,  200, 80),
+}
+
 -- ─────────────────────────────────────────────────────────────────────────────
 -- SERVER
 -- ─────────────────────────────────────────────────────────────────────────────
 if SERVER then
-    local ALERT_COLORS = {
-        Red    = Color(220, 40,  40),
-        Yellow = Color(220, 200, 40),
-        Blue   = Color(40,  100, 220),
-        Green  = Color(40,  200, 80),
-    }
-
-    -- Clean up seating state when a player disconnects.
     hook.Add("PlayerDisconnected", "SHRPCaptainDisconnect", function(ply)
         for _, chair in ipairs(ents.FindByClass("captain_chair")) do
             if IsValid(chair) and chair.SeatedPlayer == ply then
@@ -42,7 +42,7 @@ if SERVER then
         if not isSeated then return end
 
         local alert = net.ReadString()
-        if not ALERT_COLORS[alert] then return end
+        if not SHRPCaptain.AlertColors[alert] then return end
 
         -- Relay the alert to every client for colored display.
         net.Start("captain_alert_display")
@@ -71,16 +71,9 @@ if CLIENT then
     end)
 
     -- ── Alert display ─────────────────────────────────────────────────────────
-    local ALERT_COLORS = {
-        Red    = Color(220, 40,  40),
-        Yellow = Color(220, 200, 40),
-        Blue   = Color(40,  100, 220),
-        Green  = Color(40,  200, 80),
-    }
-
     net.Receive("captain_alert_display", function()
         local alert = net.ReadString()
-        local col   = ALERT_COLORS[alert] or Color(255, 255, 255)
+        local col   = SHRPCaptain.AlertColors[alert] or Color(255, 255, 255)
         chat.AddText(col, "[Destiny] " .. string.upper(alert) .. " ALERT!")
     end)
 
@@ -140,6 +133,8 @@ if CLIENT then
         elseif btn == KEY_V then
             if SHRPTactical and SHRPTactical.OpenTacticalPanel then
                 SHRPTactical.OpenTacticalPanel()
+            else
+                chat.AddText(Color(200, 100, 100), "[Destiny] Tactical system is not available.")
             end
         end
     end)
