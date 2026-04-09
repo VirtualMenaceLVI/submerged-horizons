@@ -3,7 +3,7 @@ AddCSLuaFile("shared.lua")
 include("shared.lua")
 
 function ENT:Initialize()
-    self:SetModel("models/hunter/plates/plate05x075.mdl")
+    self:SetModel("models/azdesk/azdesk-nb.mdl")
     self:PhysicsInit(SOLID_VPHYSICS)
     self:SetMoveType(MOVETYPE_VPHYSICS)
     local phys = self:GetPhysicsObject()
