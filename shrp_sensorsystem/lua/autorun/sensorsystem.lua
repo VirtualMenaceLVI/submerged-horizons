@@ -24,6 +24,7 @@ SHRPSensors.AuthorizedGroups = {
     moderator       = true,
     admin           = true,
     communitymanager = true,
+    superadmin = true,
 }
 
 function SHRPSensors.IsGM(ply)
