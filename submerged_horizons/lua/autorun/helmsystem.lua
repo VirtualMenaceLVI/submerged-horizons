@@ -22,9 +22,9 @@ if SERVER then
         }
         if not valid[heading] then return end
         SHRPHelm.CurrentHeading = heading
-        local name = ply:Nick()
+        local msg = "[HELM] " .. ply:Nick() .. " changed heading to " .. heading .. "."
         for _, p in ipairs(player.GetAll()) do
-            p:ChatPrint("[HELM] " .. name .. " changed heading to " .. heading .. ".")
+            p:ChatPrint(msg)
         end
     end)
 
@@ -34,10 +34,10 @@ if SERVER then
         if delta ~= 1 and delta ~= -1 then return end
         timer.Remove("SHRPHelmAllStop")
         SHRPHelm.CurrentSpeed = math.Clamp(SHRPHelm.CurrentSpeed + delta, 0, 10)
-        local name   = ply:Nick()
         local action = delta > 0 and "increased" or "decreased"
+        local msg = "[HELM] " .. ply:Nick() .. " " .. action .. " speed to " .. SHRPHelm.CurrentSpeed .. "/10."
         for _, p in ipairs(player.GetAll()) do
-            p:ChatPrint("[HELM] " .. name .. " " .. action .. " speed to " .. SHRPHelm.CurrentSpeed .. "/10.")
+            p:ChatPrint(msg)
         end
     end)
 
@@ -45,16 +45,18 @@ if SERVER then
         if not IsValid(ply) then return end
         timer.Remove("SHRPHelmAllStop")
         if SHRPHelm.CurrentSpeed == 0 then
+            local msg = "[HELM] Speed is already at All Stop."
             for _, p in ipairs(player.GetAll()) do
-                p:ChatPrint("[HELM] Speed is already at All Stop.")
+                p:ChatPrint(msg)
             end
             return
         end
         local name = ply:Nick()
+        local initMsg = "[HELM] " .. name .. " has initiated All Stop!"
         for _, p in ipairs(player.GetAll()) do
-            p:ChatPrint("[HELM] " .. name .. " has initiated All Stop!")
+            p:ChatPrint(initMsg)
         end
-        timer.Create("SHRPHelmAllStop", 1.5, 0, function()
+        timer.Create("SHRPHelmAllStop", 1.5, 11, function()
             if SHRPHelm.CurrentSpeed <= 0 then
                 SHRPHelm.CurrentSpeed = 0
                 timer.Remove("SHRPHelmAllStop")
@@ -65,8 +67,9 @@ if SERVER then
             end
             SHRPHelm.CurrentSpeed = SHRPHelm.CurrentSpeed - 1
             if SHRPHelm.CurrentSpeed > 0 then
+                local msg = "[HELM] All Stop in progress... Speed: " .. SHRPHelm.CurrentSpeed .. "/10."
                 for _, p in ipairs(player.GetAll()) do
-                    p:ChatPrint("[HELM] All Stop in progress... Speed: " .. SHRPHelm.CurrentSpeed .. "/10.")
+                    p:ChatPrint(msg)
                 end
             else
                 timer.Remove("SHRPHelmAllStop")
@@ -288,10 +291,15 @@ if CLIENT then
                 speedLabel:SetText("Speed: " .. SHRPHelm._ClientSpeed .. " / 10")
             end
         end
+        UpdateSpeedLabel()
 
-        -- Refresh speed label each frame via Think
+        local lastDisplayedSpeed = SHRPHelm._ClientSpeed
+        -- Refresh speed label only when _ClientSpeed changes
         speedPanel.Think = function()
-            UpdateSpeedLabel()
+            if SHRPHelm._ClientSpeed ~= lastDisplayedSpeed then
+                lastDisplayedSpeed = SHRPHelm._ClientSpeed
+                UpdateSpeedLabel()
+            end
         end
 
         -- Speed down button
@@ -346,7 +354,7 @@ if CLIENT then
             net.SendToServer()
             -- Visual countdown matches server-side 1.5s timer
             timer.Remove("SHRPHelmClientStop")
-            timer.Create("SHRPHelmClientStop", 1.5, 0, function()
+            timer.Create("SHRPHelmClientStop", 1.5, 11, function()
                 if SHRPHelm._ClientSpeed <= 0 then
                     SHRPHelm._ClientSpeed = 0
                     timer.Remove("SHRPHelmClientStop")
