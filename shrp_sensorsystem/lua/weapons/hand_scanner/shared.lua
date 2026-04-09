@@ -3,7 +3,7 @@
 -- ─────────────────────────────────────────────────────────────────────────────
 SWEP.PrintName      = "Hand Scanner"
 SWEP.Author         = "SHRP"
-SWEP.Category       = "SHRP"
+SWEP.Category       = "Submerged Horizons"
 SWEP.Spawnable      = true
 SWEP.AdminOnly      = false
 
@@ -25,11 +25,11 @@ SWEP.SlotPos         = 2
 SWEP.DrawAmmo        = false
 SWEP.DrawCrosshair   = true
 
-SWEP.ViewModel  = "models/weapons/c_pistol.mdl"
-SWEP.WorldModel = "models/weapons/w_bugbait.mdl"
+SWEP.ViewModel  = "models/items/maco_scanner.mdl"
+SWEP.WorldModel = "models/items/maco_scanner.mdl"
 
 function SWEP:Initialize()
-    self:SetHoldType("pistol")
+    self:SetHoldType("melee")
 end
 
 -- ── Primary: begin scan ───────────────────────────────────────────────────────
@@ -38,12 +38,6 @@ function SWEP:PrimaryAttack()
 
     local ply = self:GetOwner()
     if not IsValid(ply) then return end
-
-    -- Relay power check
-    if SHRPSensors and SHRPSensors.GetRelayPercent and SHRPSensors.GetRelayPercent() < 1 then
-        ply:ChatPrint("Sensor relays offline – cannot scan.")
-        return
-    end
 
     -- Already scanning?
     if ply:GetNWBool("SHRPScanning", false) then
