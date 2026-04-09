@@ -2,9 +2,17 @@ if SERVER then
     util.AddNetworkString("tactical_open_panel")
     util.AddNetworkString("tactical_fire_torpedo")
     util.AddNetworkString("tactical_fire_dew")
+    util.AddNetworkString("tactical_arm_torpedo")
+    util.AddNetworkString("tactical_arm_dew")
+    util.AddNetworkString("tactical_polarize_hull")
 end
 
 SHRPTactical = SHRPTactical or {}
+
+-- Persistent toggle states so they survive panel close/reopen.
+SHRPTactical.TorpedoArmed  = SHRPTactical.TorpedoArmed  or false
+SHRPTactical.DEWArmed      = SHRPTactical.DEWArmed      or false
+SHRPTactical.HullPolarized = SHRPTactical.HullPolarized or false
 
 function SHRPTactical.GetWeaponsRelayPercent()
     local relays = ents.FindByClass("relay_weapons")
@@ -57,6 +65,33 @@ if SERVER then
             end
         end
     end)
+
+    net.Receive("tactical_arm_torpedo", function(_, ply)
+        if not IsValid(ply) then return end
+        local armed = net.ReadBool()
+        local name  = ply:Nick()
+        for _, p in ipairs(player.GetAll()) do
+            p:ChatPrint("[TACTICAL] " .. name .. (armed and " has armed the torpedo launchers." or " has disarmed the torpedo launchers."))
+        end
+    end)
+
+    net.Receive("tactical_arm_dew", function(_, ply)
+        if not IsValid(ply) then return end
+        local armed = net.ReadBool()
+        local name  = ply:Nick()
+        for _, p in ipairs(player.GetAll()) do
+            p:ChatPrint("[TACTICAL] " .. name .. (armed and " has armed the FBX-9 D.E.W." or " has disarmed the FBX-9 D.E.W."))
+        end
+    end)
+
+    net.Receive("tactical_polarize_hull", function(_, ply)
+        if not IsValid(ply) then return end
+        local polarized = net.ReadBool()
+        local name      = ply:Nick()
+        for _, p in ipairs(player.GetAll()) do
+            p:ChatPrint("[TACTICAL] " .. name .. (polarized and " has polarized the hull plating." or " has depolarized the hull plating."))
+        end
+    end)
 end
 
 -- ─────────────────────────────────────────────────────────────────────────────
@@ -75,11 +110,6 @@ if CLIENT then
         if IsValid(SHRPTactical._TacticalPanel) then
             SHRPTactical._TacticalPanel:Close()
         end
-
-        -- Toggle states (client-side RP controls)
-        local torpedoArmed = false
-        local dewArmed     = false
-        local hullPolarized = false
 
         local COL_BG         = Color(10, 16, 26, 250)
         local COL_HEADER     = Color(110, 20, 20, 235)
@@ -159,18 +189,21 @@ if CLIENT then
         btnArmTorp:SetFont("DermaDefaultBold")
         btnArmTorp:SetText("TORPEDOES: DISARMED")
         btnArmTorp.Paint = function(self, w, h)
-            local col = torpedoArmed and COL_ARMED or COL_DISARMED
+            local col = SHRPTactical.TorpedoArmed and COL_ARMED or COL_DISARMED
             draw.RoundedBox(6, 0, 0, w, h, col)
             draw.SimpleText(
-                torpedoArmed and "TORPEDOES: ARMED" or "TORPEDOES: DISARMED",
+                SHRPTactical.TorpedoArmed and "TORPEDOES: ARMED" or "TORPEDOES: DISARMED",
                 "DermaDefaultBold", w * 0.5, h * 0.5,
                 Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER
             )
             return true
         end
         btnArmTorp.DoClick = function()
-            torpedoArmed = not torpedoArmed
-            surface.PlaySound(torpedoArmed and "buttons/button14.wav" or "buttons/button10.wav")
+            SHRPTactical.TorpedoArmed = not SHRPTactical.TorpedoArmed
+            surface.PlaySound(SHRPTactical.TorpedoArmed and "buttons/button14.wav" or "buttons/button10.wav")
+            net.Start("tactical_arm_torpedo")
+            net.WriteBool(SHRPTactical.TorpedoArmed)
+            net.SendToServer()
         end
 
         -- Arm DEW toggle
@@ -178,18 +211,21 @@ if CLIENT then
         btnArmDEW:SetPos(236, 30); btnArmDEW:SetSize(216, 38)
         btnArmDEW:SetFont("DermaDefaultBold")
         btnArmDEW.Paint = function(self, w, h)
-            local col = dewArmed and COL_ARMED or COL_DISARMED
+            local col = SHRPTactical.DEWArmed and COL_ARMED or COL_DISARMED
             draw.RoundedBox(6, 0, 0, w, h, col)
             draw.SimpleText(
-                dewArmed and "D.E.W.: ARMED" or "D.E.W.: DISARMED",
+                SHRPTactical.DEWArmed and "D.E.W.: ARMED" or "D.E.W.: DISARMED",
                 "DermaDefaultBold", w * 0.5, h * 0.5,
                 Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER
             )
             return true
         end
         btnArmDEW.DoClick = function()
-            dewArmed = not dewArmed
-            surface.PlaySound(dewArmed and "buttons/button14.wav" or "buttons/button10.wav")
+            SHRPTactical.DEWArmed = not SHRPTactical.DEWArmed
+            surface.PlaySound(SHRPTactical.DEWArmed and "buttons/button14.wav" or "buttons/button10.wav")
+            net.Start("tactical_arm_dew")
+            net.WriteBool(SHRPTactical.DEWArmed)
+            net.SendToServer()
         end
 
         -- Polarize Hull Plating toggle
@@ -197,18 +233,21 @@ if CLIENT then
         btnPolarize:SetPos(8, 80); btnPolarize:SetSize(444, 38)
         btnPolarize:SetFont("DermaDefaultBold")
         btnPolarize.Paint = function(self, w, h)
-            local col = hullPolarized and COL_POLARIZED or COL_INACTIVE
+            local col = SHRPTactical.HullPolarized and COL_POLARIZED or COL_INACTIVE
             draw.RoundedBox(6, 0, 0, w, h, col)
             draw.SimpleText(
-                hullPolarized and "HULL PLATING: POLARIZED" or "HULL PLATING: INACTIVE",
+                SHRPTactical.HullPolarized and "HULL PLATING: POLARIZED" or "HULL PLATING: INACTIVE",
                 "DermaDefaultBold", w * 0.5, h * 0.5,
                 Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER
             )
             return true
         end
         btnPolarize.DoClick = function()
-            hullPolarized = not hullPolarized
-            surface.PlaySound(hullPolarized and "buttons/button14.wav" or "buttons/button10.wav")
+            SHRPTactical.HullPolarized = not SHRPTactical.HullPolarized
+            surface.PlaySound(SHRPTactical.HullPolarized and "buttons/button14.wav" or "buttons/button10.wav")
+            net.Start("tactical_polarize_hull")
+            net.WriteBool(SHRPTactical.HullPolarized)
+            net.SendToServer()
         end
 
         -- ── Weapons fire section ──────────────────────────────────────────────
@@ -230,7 +269,7 @@ if CLIENT then
         btnFireTorp:SetPos(8, 30); btnFireTorp:SetSize(216, 78)
         btnFireTorp:SetFont("DermaDefaultBold")
         btnFireTorp.Paint = function(self, w, h)
-            local enabled = torpedoArmed
+            local enabled = SHRPTactical.TorpedoArmed
             local col = enabled and COL_FIRE or COL_FIRE_OFF
             draw.RoundedBox(6, 0, 0, w, h, col)
             draw.SimpleText(
@@ -239,15 +278,15 @@ if CLIENT then
                 Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER
             )
             draw.SimpleText(
-                torpedoArmed and "[ ARMED ]" or "[ NOT ARMED ]",
+                SHRPTactical.TorpedoArmed and "[ ARMED ]" or "[ NOT ARMED ]",
                 "DermaDefault", w * 0.5, h * 0.5 + 10,
-                torpedoArmed and Color(180, 255, 180) or Color(200, 100, 100),
+                SHRPTactical.TorpedoArmed and Color(180, 255, 180) or Color(200, 100, 100),
                 TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER
             )
             return true
         end
         btnFireTorp.DoClick = function()
-            if not torpedoArmed then
+            if not SHRPTactical.TorpedoArmed then
                 surface.PlaySound("buttons/button8.wav")
                 return
             end
@@ -260,7 +299,7 @@ if CLIENT then
         btnFireDEW:SetPos(236, 30); btnFireDEW:SetSize(216, 78)
         btnFireDEW:SetFont("DermaDefaultBold")
         btnFireDEW.Paint = function(self, w, h)
-            local enabled = dewArmed
+            local enabled = SHRPTactical.DEWArmed
             local col = enabled and COL_FIRE or COL_FIRE_OFF
             draw.RoundedBox(6, 0, 0, w, h, col)
             draw.SimpleText(
@@ -269,15 +308,15 @@ if CLIENT then
                 Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER
             )
             draw.SimpleText(
-                dewArmed and "[ ARMED ]" or "[ NOT ARMED ]",
+                SHRPTactical.DEWArmed and "[ ARMED ]" or "[ NOT ARMED ]",
                 "DermaDefault", w * 0.5, h * 0.5 + 10,
-                dewArmed and Color(180, 255, 180) or Color(200, 100, 100),
+                SHRPTactical.DEWArmed and Color(180, 255, 180) or Color(200, 100, 100),
                 TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER
             )
             return true
         end
         btnFireDEW.DoClick = function()
-            if not dewArmed then
+            if not SHRPTactical.DEWArmed then
                 surface.PlaySound("buttons/button8.wav")
                 return
             end
