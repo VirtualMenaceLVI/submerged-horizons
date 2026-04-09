@@ -8,6 +8,7 @@ if SERVER then
 end
 
 SHRPOps = SHRPOps or {}
+SHRPOps.ShipName = SHRPOps.ShipName or "Destiny"
 
 -- ─────────────────────────────────────────────────────────────────────────────
 -- SERVER
@@ -34,7 +35,7 @@ if SERVER then
         end
 
         local msg = net.ReadString()
-        if not msg or string.len(msg) == 0 then return end
+        if not msg or #msg == 0 then return end
         msg = string.sub(msg, 1, 250)
 
         net.Start("ops_ship_display")
@@ -55,7 +56,7 @@ if CLIENT then
     net.Receive("ops_alert_display", function()
         local alert = net.ReadString()
         local col = (SHRPCaptain and SHRPCaptain.AlertColors and SHRPCaptain.AlertColors[alert]) or Color(255, 255, 255)
-        chat.AddText(col, "[Destiny] " .. string.upper(alert) .. " ALERT!")
+        chat.AddText(col, "[" .. SHRPOps.ShipName .. "] " .. string.upper(alert) .. " ALERT!")
     end)
 
     -- Ship-to-ship message broadcast
@@ -69,7 +70,7 @@ if CLIENT then
         end
 
         -- Show in main chat
-        chat.AddText(Color(100, 200, 255), "[Destiny] " .. msg)
+        chat.AddText(Color(100, 200, 255), "[" .. SHRPOps.ShipName .. "] " .. msg)
 
         -- Update the panel log if it is open
         if SHRPOps._RefreshLog then
@@ -220,7 +221,7 @@ if CLIENT then
         -- Populate with existing log history
         for _, msg in ipairs(SHRPOps.ShipLog) do
             logPanel:InsertColorChange(100, 200, 255, 255)
-            logPanel:AppendText("[Destiny] " .. msg .. "\n")
+            logPanel:AppendText("[" .. SHRPOps.ShipName .. "] " .. msg .. "\n")
         end
         logPanel:GotoTextEnd()
 
@@ -231,7 +232,7 @@ if CLIENT then
                 return
             end
             logPanel:InsertColorChange(100, 200, 255, 255)
-            logPanel:AppendText("[Destiny] " .. msg .. "\n")
+            logPanel:AppendText("[" .. SHRPOps.ShipName .. "] " .. msg .. "\n")
             logPanel:GotoTextEnd()
         end
 
@@ -255,7 +256,7 @@ if CLIENT then
 
         local function SendMessage()
             local msg = textEntry:GetValue()
-            if not msg or string.len(msg) == 0 then return end
+            if not msg or #msg == 0 then return end
             net.Start("ops_ship_message")
             net.WriteString(msg)
             net.SendToServer()
