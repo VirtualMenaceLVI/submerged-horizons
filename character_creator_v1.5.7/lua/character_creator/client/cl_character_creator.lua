@@ -187,6 +187,10 @@ function CharacterCreator.MenuSpawn(CHCBool)
 						CharacterCreatorModelLoad1.Entity:SetBodygroup(2, CharacterCreatorTab[1][ "CharacterCreatorGlovesId" ])
 						CharacterCreatorModelLoad1.Entity:SetBodygroup(3, CharacterCreatorTab[1][ "CharacterCreatorTrousersId" ])
 						CharacterCreatorModelLoad1.Entity:SetBodygroup(5, CharacterCreatorTab[1][ "CharacterCreatorHeadId" ])
+						CharacterCreatorModelLoad1.Entity:SetBodygroup(0, CharacterCreatorTab[1][ "CharacterCreatorBg0Id" ] or 0)
+						CharacterCreatorModelLoad1.Entity:SetBodygroup(4, CharacterCreatorTab[1][ "CharacterCreatorBg4Id" ] or 0)
+						CharacterCreatorModelLoad1.Entity:SetBodygroup(6, CharacterCreatorTab[1][ "CharacterCreatorBg6Id" ] or 0)
+						CharacterCreatorModelLoad1.Entity:SetBodygroup(7, CharacterCreatorTab[1][ "CharacterCreatorBg7Id" ] or 0)
 						if CharacterCreator.CompatibilityClothesMod then 
 							ClothesModeCompatibility(CharacterCreatorModelLoad1, 1)
 						end 
@@ -230,6 +234,10 @@ function CharacterCreator.MenuSpawn(CHCBool)
 							CharacterCreatorModel.Entity:SetBodygroup(2, CharacterCreatorTab[1][ "CharacterCreatorGlovesId" ])
 							CharacterCreatorModel.Entity:SetBodygroup(3, CharacterCreatorTab[1][ "CharacterCreatorTrousersId" ])
 							CharacterCreatorModel.Entity:SetBodygroup(5, CharacterCreatorTab[1][ "CharacterCreatorHeadId" ])
+						CharacterCreatorModel.Entity:SetBodygroup(0, CharacterCreatorTab[1][ "CharacterCreatorBg0Id" ] or 0)
+						CharacterCreatorModel.Entity:SetBodygroup(4, CharacterCreatorTab[1][ "CharacterCreatorBg4Id" ] or 0)
+						CharacterCreatorModel.Entity:SetBodygroup(6, CharacterCreatorTab[1][ "CharacterCreatorBg6Id" ] or 0)
+						CharacterCreatorModel.Entity:SetBodygroup(7, CharacterCreatorTab[1][ "CharacterCreatorBg7Id" ] or 0)
 							if CharacterCreator.CompatibilityClothesMod then 
 								ClothesModeCompatibility(CharacterCreatorModel, 1)
 							end 
@@ -361,6 +369,10 @@ function CharacterCreator.MenuSpawn(CHCBool)
 						CharacterCreatorModelLoad2.Entity:SetBodygroup(2, CharacterCreatorTab[2][ "CharacterCreatorGlovesId" ])
 						CharacterCreatorModelLoad2.Entity:SetBodygroup(3, CharacterCreatorTab[2][ "CharacterCreatorTrousersId" ])
 						CharacterCreatorModelLoad2.Entity:SetBodygroup(5, CharacterCreatorTab[2][ "CharacterCreatorHeadId" ])
+						CharacterCreatorModelLoad2.Entity:SetBodygroup(0, CharacterCreatorTab[2][ "CharacterCreatorBg0Id" ] or 0)
+						CharacterCreatorModelLoad2.Entity:SetBodygroup(4, CharacterCreatorTab[2][ "CharacterCreatorBg4Id" ] or 0)
+						CharacterCreatorModelLoad2.Entity:SetBodygroup(6, CharacterCreatorTab[2][ "CharacterCreatorBg6Id" ] or 0)
+						CharacterCreatorModelLoad2.Entity:SetBodygroup(7, CharacterCreatorTab[2][ "CharacterCreatorBg7Id" ] or 0)
 						if CharacterCreator.CompatibilityClothesMod then 
 							ClothesModeCompatibility(CharacterCreatorModelLoad2, 2)
 						end 
@@ -403,6 +415,10 @@ function CharacterCreator.MenuSpawn(CHCBool)
 							CharacterCreatorModel.Entity:SetBodygroup(2, CharacterCreatorTab[2][ "CharacterCreatorGlovesId" ])
 							CharacterCreatorModel.Entity:SetBodygroup(3, CharacterCreatorTab[2][ "CharacterCreatorTrousersId" ])
 							CharacterCreatorModel.Entity:SetBodygroup(5, CharacterCreatorTab[2][ "CharacterCreatorHeadId" ])
+						CharacterCreatorModel.Entity:SetBodygroup(0, CharacterCreatorTab[2][ "CharacterCreatorBg0Id" ] or 0)
+						CharacterCreatorModel.Entity:SetBodygroup(4, CharacterCreatorTab[2][ "CharacterCreatorBg4Id" ] or 0)
+						CharacterCreatorModel.Entity:SetBodygroup(6, CharacterCreatorTab[2][ "CharacterCreatorBg6Id" ] or 0)
+						CharacterCreatorModel.Entity:SetBodygroup(7, CharacterCreatorTab[2][ "CharacterCreatorBg7Id" ] or 0)
 							if CharacterCreator.CompatibilityClothesMod then 
 								ClothesModeCompatibility(CharacterCreatorModel, 2)
 							end 
@@ -536,6 +552,10 @@ function CharacterCreator.MenuSpawn(CHCBool)
 						CharacterCreatorModelLoad3.Entity:SetBodygroup(2, CharacterCreatorTab[3][ "CharacterCreatorGlovesId" ])
 						CharacterCreatorModelLoad3.Entity:SetBodygroup(3, CharacterCreatorTab[3][ "CharacterCreatorTrousersId" ])
 						CharacterCreatorModelLoad3.Entity:SetBodygroup(5, CharacterCreatorTab[3][ "CharacterCreatorHeadId" ])
+						CharacterCreatorModelLoad3.Entity:SetBodygroup(0, CharacterCreatorTab[3][ "CharacterCreatorBg0Id" ] or 0)
+						CharacterCreatorModelLoad3.Entity:SetBodygroup(4, CharacterCreatorTab[3][ "CharacterCreatorBg4Id" ] or 0)
+						CharacterCreatorModelLoad3.Entity:SetBodygroup(6, CharacterCreatorTab[3][ "CharacterCreatorBg6Id" ] or 0)
+						CharacterCreatorModelLoad3.Entity:SetBodygroup(7, CharacterCreatorTab[3][ "CharacterCreatorBg7Id" ] or 0)
 						if CharacterCreator.CompatibilityClothesMod then 
 							ClothesModeCompatibility(CharacterCreatorModelLoad3, 3)
 						end 
@@ -579,6 +599,10 @@ function CharacterCreator.MenuSpawn(CHCBool)
 							CharacterCreatorModel.Entity:SetBodygroup(2, CharacterCreatorTab[3][ "CharacterCreatorGlovesId" ])
 							CharacterCreatorModel.Entity:SetBodygroup(3, CharacterCreatorTab[3][ "CharacterCreatorTrousersId" ])
 							CharacterCreatorModel.Entity:SetBodygroup(5, CharacterCreatorTab[3][ "CharacterCreatorHeadId" ])
+						CharacterCreatorModel.Entity:SetBodygroup(0, CharacterCreatorTab[3][ "CharacterCreatorBg0Id" ] or 0)
+						CharacterCreatorModel.Entity:SetBodygroup(4, CharacterCreatorTab[3][ "CharacterCreatorBg4Id" ] or 0)
+						CharacterCreatorModel.Entity:SetBodygroup(6, CharacterCreatorTab[3][ "CharacterCreatorBg6Id" ] or 0)
+						CharacterCreatorModel.Entity:SetBodygroup(7, CharacterCreatorTab[3][ "CharacterCreatorBg7Id" ] or 0)
 							if CharacterCreator.CompatibilityClothesMod then 
 								ClothesModeCompatibility(CharacterCreatorModel, 3)
 							end 
@@ -812,6 +836,10 @@ function CharacterCreator.CreateCharacter(id)
 	CharacterCreatorTorseId = 0 
 	CharacterCreatorGlovesId = 0 
 	CharacterCreatorTrousersId = 0 
+	CharacterCreatorBg0Id = 0
+	CharacterCreatorBg4Id = 0
+	CharacterCreatorBg6Id = 0
+	CharacterCreatorBg7Id = 0
 
 	local CharacterFrameBaseParent = vgui.Create("DFrame")
 	CharacterFrameBaseParent:SetSize(ScrW()*1, ScrH()*1)
@@ -1076,25 +1104,25 @@ function CharacterCreator.CreateCharacter(id)
 	function CharacterCreatorModel:LayoutEntity( ent ) end
 
 	if not CharacterCreator.CharacterDisableBodyGroup then 
-		local CharacterCreatorButtonHeadNext = vgui.Create("DButton", CharacterFrameBaseParent)
-		CharacterCreatorButtonHeadNext:SetPos(  ScrW() * 0.88, ScrH() * 0.23 )
-		CharacterCreatorButtonHeadNext:SetSize(ScrW()*0.021, ScrH()*0.05)
-		CharacterCreatorButtonHeadNext:SetText("⧁")
-		CharacterCreatorButtonHeadNext:SetFont("chc_kobralost_3")
-		CharacterCreatorButtonHeadNext.DoClick = function()
+		local CharacterCreatorButtonBg0Next = vgui.Create("DButton", CharacterFrameBaseParent)
+		CharacterCreatorButtonBg0Next:SetPos(  ScrW() * 0.88, ScrH() * 0.22 )
+		CharacterCreatorButtonBg0Next:SetSize(ScrW()*0.021, ScrH()*0.05)
+		CharacterCreatorButtonBg0Next:SetText("⧁")
+		CharacterCreatorButtonBg0Next:SetFont("chc_kobralost_3")
+		CharacterCreatorButtonBg0Next.DoClick = function()
 			local ent = CharacterCreatorModel.Entity
-			if CharacterCreatorHeadId < ent:GetBodygroupCount(5) then 
-				CharacterCreatorHeadId = CharacterCreatorHeadId + 1 
-			elseif CharacterCreatorHeadId > ent:GetBodygroupCount(5) - 1 then 
-				CharacterCreatorHeadId = 0 
+			if CharacterCreatorBg0Id < ent:GetBodygroupCount(0) then 
+				CharacterCreatorBg0Id = CharacterCreatorBg0Id + 1 
+			elseif CharacterCreatorBg0Id > ent:GetBodygroupCount(0) - 1 then 
+				CharacterCreatorBg0Id = 0 
 			end 
-			ent:SetBodygroup( 5, CharacterCreatorHeadId )
+			ent:SetBodygroup( 0, CharacterCreatorBg0Id )
 		end 
-		CharacterCreatorButtonHeadNext:SetTextColor(CharacterCreator.Colors["white"])
-		CharacterCreatorButtonHeadNext.Paint = function() end 
+		CharacterCreatorButtonBg0Next:SetTextColor(CharacterCreator.Colors["white"])
+		CharacterCreatorButtonBg0Next.Paint = function() end 
 
 		local CharacterCreatorButtonTorseBext = vgui.Create("DButton", CharacterFrameBaseParent)
-		CharacterCreatorButtonTorseBext:SetPos(  ScrW() * 0.88, ScrH() * 0.4 )
+		CharacterCreatorButtonTorseBext:SetPos(  ScrW() * 0.88, ScrH() * 0.29 )
 		CharacterCreatorButtonTorseBext:SetSize(ScrW()*0.021, ScrH()*0.05)
 		CharacterCreatorButtonTorseBext:SetText("⧁")
 		CharacterCreatorButtonTorseBext:SetFont("chc_kobralost_3")
@@ -1111,8 +1139,8 @@ function CharacterCreator.CreateCharacter(id)
 		CharacterCreatorButtonTorseBext.Paint = function() end 
 
 		local CharacterCreatorButtonGlovesNext = vgui.Create("DButton", CharacterFrameBaseParent)
-		CharacterCreatorButtonGlovesNext:SetPos(  ScrW() * 0.88, ScrH() * 0.7 )
-		CharacterCreatorButtonGlovesNext:SetSize(ScrW()*0.021, ScrH()*0.15)
+		CharacterCreatorButtonGlovesNext:SetPos(  ScrW() * 0.88, ScrH() * 0.36 )
+		CharacterCreatorButtonGlovesNext:SetSize(ScrW()*0.021, ScrH()*0.05)
 		CharacterCreatorButtonGlovesNext:SetText("⧁")
 		CharacterCreatorButtonGlovesNext:SetFont("chc_kobralost_3")
 		CharacterCreatorButtonGlovesNext.DoClick = function()
@@ -1128,8 +1156,8 @@ function CharacterCreator.CreateCharacter(id)
 		CharacterCreatorButtonGlovesNext.Paint = function() end 
 
 		local CharacterCreatorButtonTrousersNext = vgui.Create("DButton", CharacterFrameBaseParent)
-		CharacterCreatorButtonTrousersNext:SetPos(  ScrW() * 0.88, ScrH() * 0.52 )
-		CharacterCreatorButtonTrousersNext:SetSize(ScrW()*0.021, ScrH()*0.15)
+		CharacterCreatorButtonTrousersNext:SetPos(  ScrW() * 0.88, ScrH() * 0.43 )
+		CharacterCreatorButtonTrousersNext:SetSize(ScrW()*0.021, ScrH()*0.05)
 		CharacterCreatorButtonTrousersNext:SetText("⧁")
 		CharacterCreatorButtonTrousersNext:SetFont("chc_kobralost_3")
 		CharacterCreatorButtonTrousersNext.DoClick = function()
@@ -1144,25 +1172,93 @@ function CharacterCreator.CreateCharacter(id)
 		CharacterCreatorButtonTrousersNext:SetTextColor(CharacterCreator.Colors["white"])
 		CharacterCreatorButtonTrousersNext.Paint = function() end 
 
-		local CharacterCreatorButtonHeadBefore = vgui.Create("DButton", CharacterFrameBaseParent)
-		CharacterCreatorButtonHeadBefore:SetPos(  ScrW() * 0.69, ScrH() * 0.23 )
-		CharacterCreatorButtonHeadBefore:SetSize(ScrW()*0.021, ScrH()*0.05)
-		CharacterCreatorButtonHeadBefore:SetText("⧀")
-		CharacterCreatorButtonHeadBefore:SetFont("chc_kobralost_3")
-		CharacterCreatorButtonHeadBefore.DoClick = function()
+		local CharacterCreatorButtonBg4Next = vgui.Create("DButton", CharacterFrameBaseParent)
+		CharacterCreatorButtonBg4Next:SetPos(  ScrW() * 0.88, ScrH() * 0.50 )
+		CharacterCreatorButtonBg4Next:SetSize(ScrW()*0.021, ScrH()*0.05)
+		CharacterCreatorButtonBg4Next:SetText("⧁")
+		CharacterCreatorButtonBg4Next:SetFont("chc_kobralost_3")
+		CharacterCreatorButtonBg4Next.DoClick = function()
 			local ent = CharacterCreatorModel.Entity
-			if CharacterCreatorHeadId != 0 then 
-				CharacterCreatorHeadId = CharacterCreatorHeadId - 1 
-			elseif CharacterCreatorHeadId == 0 then 
-				CharacterCreatorHeadId = ent:GetBodygroupCount(5)
+			if CharacterCreatorBg4Id < ent:GetBodygroupCount(4) then 
+				CharacterCreatorBg4Id = CharacterCreatorBg4Id + 1 
+			elseif CharacterCreatorBg4Id > ent:GetBodygroupCount(4) - 1 then 
+				CharacterCreatorBg4Id = 0 
+			end 
+			ent:SetBodygroup( 4, CharacterCreatorBg4Id )
+		end 
+		CharacterCreatorButtonBg4Next:SetTextColor(CharacterCreator.Colors["white"])
+		CharacterCreatorButtonBg4Next.Paint = function() end 
+
+		local CharacterCreatorButtonHeadNext = vgui.Create("DButton", CharacterFrameBaseParent)
+		CharacterCreatorButtonHeadNext:SetPos(  ScrW() * 0.88, ScrH() * 0.57 )
+		CharacterCreatorButtonHeadNext:SetSize(ScrW()*0.021, ScrH()*0.05)
+		CharacterCreatorButtonHeadNext:SetText("⧁")
+		CharacterCreatorButtonHeadNext:SetFont("chc_kobralost_3")
+		CharacterCreatorButtonHeadNext.DoClick = function()
+			local ent = CharacterCreatorModel.Entity
+			if CharacterCreatorHeadId < ent:GetBodygroupCount(5) then 
+				CharacterCreatorHeadId = CharacterCreatorHeadId + 1 
+			elseif CharacterCreatorHeadId > ent:GetBodygroupCount(5) - 1 then 
+				CharacterCreatorHeadId = 0 
 			end 
 			ent:SetBodygroup( 5, CharacterCreatorHeadId )
 		end 
-		CharacterCreatorButtonHeadBefore:SetTextColor(CharacterCreator.Colors["white"])
-		CharacterCreatorButtonHeadBefore.Paint = function() end 
+		CharacterCreatorButtonHeadNext:SetTextColor(CharacterCreator.Colors["white"])
+		CharacterCreatorButtonHeadNext.Paint = function() end 
+
+		local CharacterCreatorButtonBg6Next = vgui.Create("DButton", CharacterFrameBaseParent)
+		CharacterCreatorButtonBg6Next:SetPos(  ScrW() * 0.88, ScrH() * 0.64 )
+		CharacterCreatorButtonBg6Next:SetSize(ScrW()*0.021, ScrH()*0.05)
+		CharacterCreatorButtonBg6Next:SetText("⧁")
+		CharacterCreatorButtonBg6Next:SetFont("chc_kobralost_3")
+		CharacterCreatorButtonBg6Next.DoClick = function()
+			local ent = CharacterCreatorModel.Entity
+			if CharacterCreatorBg6Id < ent:GetBodygroupCount(6) then 
+				CharacterCreatorBg6Id = CharacterCreatorBg6Id + 1 
+			elseif CharacterCreatorBg6Id > ent:GetBodygroupCount(6) - 1 then 
+				CharacterCreatorBg6Id = 0 
+			end 
+			ent:SetBodygroup( 6, CharacterCreatorBg6Id )
+		end 
+		CharacterCreatorButtonBg6Next:SetTextColor(CharacterCreator.Colors["white"])
+		CharacterCreatorButtonBg6Next.Paint = function() end 
+
+		local CharacterCreatorButtonBg7Next = vgui.Create("DButton", CharacterFrameBaseParent)
+		CharacterCreatorButtonBg7Next:SetPos(  ScrW() * 0.88, ScrH() * 0.71 )
+		CharacterCreatorButtonBg7Next:SetSize(ScrW()*0.021, ScrH()*0.05)
+		CharacterCreatorButtonBg7Next:SetText("⧁")
+		CharacterCreatorButtonBg7Next:SetFont("chc_kobralost_3")
+		CharacterCreatorButtonBg7Next.DoClick = function()
+			local ent = CharacterCreatorModel.Entity
+			if CharacterCreatorBg7Id < ent:GetBodygroupCount(7) then 
+				CharacterCreatorBg7Id = CharacterCreatorBg7Id + 1 
+			elseif CharacterCreatorBg7Id > ent:GetBodygroupCount(7) - 1 then 
+				CharacterCreatorBg7Id = 0 
+			end 
+			ent:SetBodygroup( 7, CharacterCreatorBg7Id )
+		end 
+		CharacterCreatorButtonBg7Next:SetTextColor(CharacterCreator.Colors["white"])
+		CharacterCreatorButtonBg7Next.Paint = function() end 
+
+		local CharacterCreatorButtonBg0Before = vgui.Create("DButton", CharacterFrameBaseParent)
+		CharacterCreatorButtonBg0Before:SetPos(  ScrW() * 0.69, ScrH() * 0.22 )
+		CharacterCreatorButtonBg0Before:SetSize(ScrW()*0.021, ScrH()*0.05)
+		CharacterCreatorButtonBg0Before:SetText("⧀")
+		CharacterCreatorButtonBg0Before:SetFont("chc_kobralost_3")
+		CharacterCreatorButtonBg0Before.DoClick = function()
+			local ent = CharacterCreatorModel.Entity
+			if CharacterCreatorBg0Id != 0 then 
+				CharacterCreatorBg0Id = CharacterCreatorBg0Id - 1 
+			elseif CharacterCreatorBg0Id == 0 then 
+				CharacterCreatorBg0Id = ent:GetBodygroupCount(0)
+			end 
+			ent:SetBodygroup( 0, CharacterCreatorBg0Id )
+		end 
+		CharacterCreatorButtonBg0Before:SetTextColor(CharacterCreator.Colors["white"])
+		CharacterCreatorButtonBg0Before.Paint = function() end 
 
 		local CharacterCreatorButtonTorseBefore = vgui.Create("DButton", CharacterFrameBaseParent)
-		CharacterCreatorButtonTorseBefore:SetPos(  ScrW() * 0.69, ScrH() * 0.4 )
+		CharacterCreatorButtonTorseBefore:SetPos(  ScrW() * 0.69, ScrH() * 0.29 )
 		CharacterCreatorButtonTorseBefore:SetSize(ScrW()*0.021, ScrH()*0.05)
 		CharacterCreatorButtonTorseBefore:SetText("⧀")
 		CharacterCreatorButtonTorseBefore:SetFont("chc_kobralost_3")
@@ -1179,8 +1275,8 @@ function CharacterCreator.CreateCharacter(id)
 		CharacterCreatorButtonTorseBefore.Paint = function() end 
 
 		local CharacterCreatorButtonGlovesBefore = vgui.Create("DButton", CharacterFrameBaseParent)
-		CharacterCreatorButtonGlovesBefore:SetPos(  ScrW() * 0.69, ScrH() * 0.7 )
-		CharacterCreatorButtonGlovesBefore:SetSize(ScrW()*0.021, ScrH()*0.15)
+		CharacterCreatorButtonGlovesBefore:SetPos(  ScrW() * 0.69, ScrH() * 0.36 )
+		CharacterCreatorButtonGlovesBefore:SetSize(ScrW()*0.021, ScrH()*0.05)
 		CharacterCreatorButtonGlovesBefore:SetText("⧀")
 		CharacterCreatorButtonGlovesBefore:SetFont("chc_kobralost_3")
 		CharacterCreatorButtonGlovesBefore.DoClick = function()
@@ -1196,8 +1292,8 @@ function CharacterCreator.CreateCharacter(id)
 		CharacterCreatorButtonGlovesBefore.Paint = function() end 
 
 		local CharacterCreatorButtonTrousersBefore = vgui.Create("DButton", CharacterFrameBaseParent)
-		CharacterCreatorButtonTrousersBefore:SetPos(  ScrW() * 0.69, ScrH() * 0.52 )
-		CharacterCreatorButtonTrousersBefore:SetSize(ScrW()*0.021, ScrH()*0.15)
+		CharacterCreatorButtonTrousersBefore:SetPos(  ScrW() * 0.69, ScrH() * 0.43 )
+		CharacterCreatorButtonTrousersBefore:SetSize(ScrW()*0.021, ScrH()*0.05)
 		CharacterCreatorButtonTrousersBefore:SetText("⧀")
 		CharacterCreatorButtonTrousersBefore:SetFont("chc_kobralost_3")
 		CharacterCreatorButtonTrousersBefore.DoClick = function()
@@ -1211,6 +1307,74 @@ function CharacterCreator.CreateCharacter(id)
 		end 
 		CharacterCreatorButtonTrousersBefore:SetTextColor(CharacterCreator.Colors["white"])
 		CharacterCreatorButtonTrousersBefore.Paint = function() end 
+
+		local CharacterCreatorButtonBg4Before = vgui.Create("DButton", CharacterFrameBaseParent)
+		CharacterCreatorButtonBg4Before:SetPos(  ScrW() * 0.69, ScrH() * 0.50 )
+		CharacterCreatorButtonBg4Before:SetSize(ScrW()*0.021, ScrH()*0.05)
+		CharacterCreatorButtonBg4Before:SetText("⧀")
+		CharacterCreatorButtonBg4Before:SetFont("chc_kobralost_3")
+		CharacterCreatorButtonBg4Before.DoClick = function()
+			local ent = CharacterCreatorModel.Entity
+			if CharacterCreatorBg4Id != 0 then 
+				CharacterCreatorBg4Id = CharacterCreatorBg4Id - 1 
+			elseif CharacterCreatorBg4Id == 0 then 
+				CharacterCreatorBg4Id = ent:GetBodygroupCount(4) 
+			end 
+			ent:SetBodygroup( 4, CharacterCreatorBg4Id )
+		end 
+		CharacterCreatorButtonBg4Before:SetTextColor(CharacterCreator.Colors["white"])
+		CharacterCreatorButtonBg4Before.Paint = function() end 
+
+		local CharacterCreatorButtonHeadBefore = vgui.Create("DButton", CharacterFrameBaseParent)
+		CharacterCreatorButtonHeadBefore:SetPos(  ScrW() * 0.69, ScrH() * 0.57 )
+		CharacterCreatorButtonHeadBefore:SetSize(ScrW()*0.021, ScrH()*0.05)
+		CharacterCreatorButtonHeadBefore:SetText("⧀")
+		CharacterCreatorButtonHeadBefore:SetFont("chc_kobralost_3")
+		CharacterCreatorButtonHeadBefore.DoClick = function()
+			local ent = CharacterCreatorModel.Entity
+			if CharacterCreatorHeadId != 0 then 
+				CharacterCreatorHeadId = CharacterCreatorHeadId - 1 
+			elseif CharacterCreatorHeadId == 0 then 
+				CharacterCreatorHeadId = ent:GetBodygroupCount(5)
+			end 
+			ent:SetBodygroup( 5, CharacterCreatorHeadId )
+		end 
+		CharacterCreatorButtonHeadBefore:SetTextColor(CharacterCreator.Colors["white"])
+		CharacterCreatorButtonHeadBefore.Paint = function() end 
+
+		local CharacterCreatorButtonBg6Before = vgui.Create("DButton", CharacterFrameBaseParent)
+		CharacterCreatorButtonBg6Before:SetPos(  ScrW() * 0.69, ScrH() * 0.64 )
+		CharacterCreatorButtonBg6Before:SetSize(ScrW()*0.021, ScrH()*0.05)
+		CharacterCreatorButtonBg6Before:SetText("⧀")
+		CharacterCreatorButtonBg6Before:SetFont("chc_kobralost_3")
+		CharacterCreatorButtonBg6Before.DoClick = function()
+			local ent = CharacterCreatorModel.Entity
+			if CharacterCreatorBg6Id != 0 then 
+				CharacterCreatorBg6Id = CharacterCreatorBg6Id - 1 
+			elseif CharacterCreatorBg6Id == 0 then 
+				CharacterCreatorBg6Id = ent:GetBodygroupCount(6) 
+			end 
+			ent:SetBodygroup( 6, CharacterCreatorBg6Id )
+		end 
+		CharacterCreatorButtonBg6Before:SetTextColor(CharacterCreator.Colors["white"])
+		CharacterCreatorButtonBg6Before.Paint = function() end 
+
+		local CharacterCreatorButtonBg7Before = vgui.Create("DButton", CharacterFrameBaseParent)
+		CharacterCreatorButtonBg7Before:SetPos(  ScrW() * 0.69, ScrH() * 0.71 )
+		CharacterCreatorButtonBg7Before:SetSize(ScrW()*0.021, ScrH()*0.05)
+		CharacterCreatorButtonBg7Before:SetText("⧀")
+		CharacterCreatorButtonBg7Before:SetFont("chc_kobralost_3")
+		CharacterCreatorButtonBg7Before.DoClick = function()
+			local ent = CharacterCreatorModel.Entity
+			if CharacterCreatorBg7Id != 0 then 
+				CharacterCreatorBg7Id = CharacterCreatorBg7Id - 1 
+			elseif CharacterCreatorBg7Id == 0 then 
+				CharacterCreatorBg7Id = ent:GetBodygroupCount(7) 
+			end 
+			ent:SetBodygroup( 7, CharacterCreatorBg7Id )
+		end 
+		CharacterCreatorButtonBg7Before:SetTextColor(CharacterCreator.Colors["white"])
+		CharacterCreatorButtonBg7Before.Paint = function() end 
 	end 
 
 	local CharacterCreatorScrollModel = vgui.Create( "DScrollPanel", CharacterFrameBaseParent )
@@ -1387,6 +1551,10 @@ function CharacterCreator.CreateCharacter(id)
 				CharacterCreatorTorseId = CharacterCreatorTorseId, 
 				CharacterCreatorGlovesId = CharacterCreatorGlovesId,
 				CharacterCreatorTrousersId = CharacterCreatorTrousersId, 
+				CharacterCreatorBg0Id = CharacterCreatorBg0Id,
+				CharacterCreatorBg4Id = CharacterCreatorBg4Id,
+				CharacterCreatorBg6Id = CharacterCreatorBg6Id,
+				CharacterCreatorBg7Id = CharacterCreatorBg7Id,
 			}	
 			if CharacterCreatorModelChoose == true then
 				RunConsoleCommand("stopsound")

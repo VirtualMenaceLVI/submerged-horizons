@@ -79,6 +79,10 @@ net.Receive("CharacterCreator:SaveFirst", function(len, ply)
 				CharacterCreatorTorseId = 1, 
 				CharacterCreatorGlovesId = 1,
 				CharacterCreatorTrousersId = 1, 
+				CharacterCreatorBg0Id = 0,
+				CharacterCreatorBg4Id = 0,
+				CharacterCreatorBg6Id = 0,
+				CharacterCreatorBg7Id = 0,
 			}	
 			if file.Exists("clothesmod/"..ply:SteamID64(), "DATA") then 
 				file.Delete("clothesmod/"..ply:SteamID64(), "DATA") 
@@ -269,6 +273,10 @@ function CharacterCreatorMetaTable:CharacterCreatorSave()
 		CharacterCreatorTorseId = CharacterCreatorTabSaveCharacter["CharacterCreatorTorseId"], 
 		CharacterCreatorTrousersId = CharacterCreatorTabSaveCharacter["CharacterCreatorTrousersId"], 
 		CharacterCreatorGlovesId = CharacterCreatorTabSaveCharacter["CharacterCreatorGlovesId"], 
+		CharacterCreatorBg0Id = CharacterCreatorTabSaveCharacter["CharacterCreatorBg0Id"],
+		CharacterCreatorBg4Id = CharacterCreatorTabSaveCharacter["CharacterCreatorBg4Id"],
+		CharacterCreatorBg6Id = CharacterCreatorTabSaveCharacter["CharacterCreatorBg6Id"],
+		CharacterCreatorBg7Id = CharacterCreatorTabSaveCharacter["CharacterCreatorBg7Id"],
 		CharacterCreatorModel = CharacterCreatorModelSave,
 		CharacterCreatorWeapons = CharacterCreatorWeapons,
 		CharacterCreatorSaveHealth = CharacterCreatorSaveHealth,
@@ -438,6 +446,10 @@ net.Receive("CharacterCreator:LoadCharacter", function(len, ply)
 				ply:SetBodygroup(2, CharacterCreatorTable[ "CharacterCreatorGlovesId" ])
 				ply:SetBodygroup(3, CharacterCreatorTable[ "CharacterCreatorTrousersId" ])
 				ply:SetBodygroup(5, CharacterCreatorTable[ "CharacterCreatorHeadId" ])
+				ply:SetBodygroup(0, CharacterCreatorTable[ "CharacterCreatorBg0Id" ] or 0)
+				ply:SetBodygroup(4, CharacterCreatorTable[ "CharacterCreatorBg4Id" ] or 0)
+				ply:SetBodygroup(6, CharacterCreatorTable[ "CharacterCreatorBg6Id" ] or 0)
+				ply:SetBodygroup(7, CharacterCreatorTable[ "CharacterCreatorBg7Id" ] or 0)
 			end 
 		end 
 		if CharacterCreator.CompatibilityItemStore then 
@@ -610,6 +622,10 @@ net.Receive("CharacterCreator:ChangeTeam", function(len, ply)
 					ply:SetBodygroup(2, CharacterCreatorTable[ "CharacterCreatorGlovesId" ])
 					ply:SetBodygroup(3, CharacterCreatorTable[ "CharacterCreatorTrousersId" ])
 					ply:SetBodygroup(5, CharacterCreatorTable[ "CharacterCreatorHeadId" ])
+					ply:SetBodygroup(0, CharacterCreatorTable[ "CharacterCreatorBg0Id" ] or 0)
+					ply:SetBodygroup(4, CharacterCreatorTable[ "CharacterCreatorBg4Id" ] or 0)
+					ply:SetBodygroup(6, CharacterCreatorTable[ "CharacterCreatorBg6Id" ] or 0)
+					ply:SetBodygroup(7, CharacterCreatorTable[ "CharacterCreatorBg7Id" ] or 0)
 				end ) 
 			end 
 		end 
@@ -758,6 +774,10 @@ hook.Add("PlayerSpawn","CharacterCreator:SpawnPlayer", function(ply)
 						ply:SetBodygroup(2, CharacterCreatorTable[ "CharacterCreatorGlovesId" ])
 						ply:SetBodygroup(3, CharacterCreatorTable[ "CharacterCreatorTrousersId" ])
 						ply:SetBodygroup(5, CharacterCreatorTable[ "CharacterCreatorHeadId" ])
+						ply:SetBodygroup(0, CharacterCreatorTable[ "CharacterCreatorBg0Id" ] or 0)
+						ply:SetBodygroup(4, CharacterCreatorTable[ "CharacterCreatorBg4Id" ] or 0)
+						ply:SetBodygroup(6, CharacterCreatorTable[ "CharacterCreatorBg6Id" ] or 0)
+						ply:SetBodygroup(7, CharacterCreatorTable[ "CharacterCreatorBg7Id" ] or 0)
 					end 
 				end 
 			end   
